@@ -1,0 +1,90 @@
+language: c++
+compiler: gcc
+sudo: true
+
+matrix:
+  include:
+
+  - os: linux
+    dist: trusty
+    sudo: required
+    addons:
+      apt:
+        sources: 
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-7
+    env: 
+      - TARGET="linux"
+      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      
+  - os: linux
+    compiler: clang
+    dist: trusty
+    sudo: required
+    addons:
+      apt:
+        sources: 
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
+        packages:
+          - clang-6.0
+    env: 
+      - TARGET="linux"
+      - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+
+  - os: osx
+    env: 
+      - TARGET="osx"
+      - HOMEBREW_NO_AUTO_UPDATE=1
+      - MATRIX_EVAL="brew install gcc && CC=gcc && CXX=g++"
+      
+  - os: osx
+    compiler: clang
+    env: 
+      - TARGET="osx"
+      - MATRIX_EVAL="CC=clang && CXX=clang++"
+      
+  - os: windows
+    language: go
+    compiler: mingw
+    env: TARGET="win"
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - if [ "$CXX" = "g++" ] && [ "$TARGET" = "linux" ]; then
+      sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+    fi
+  - if [ "$TARGET" = "linux" ]; then
+      sudo apt-get update -qq;
+    fi
+  - if [ "$CXX" = "g++" ] && [ "$TARGET" = "linux" ]; then
+      sudo apt-get install -qq g++-7;
+      sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 50;
+    fi
+  - if [ -f platform/$TARGET/install.sh ]; then
+      chmod +x platform/$TARGET/install.sh;
+    fi
+
+install:
+  - if [ -f platform/$TARGET/install.sh ]; then
+      platform/$TARGET/install.sh;
+    fi
+    
+before_script:
+  - if [ "$TARGET" = "linux" ]; then
+      chmod +x platform/$TARGET/build.sh;
+    elif [ "$TARGET" = "osx" ]; then
+      chmod +x platform/$TARGET/build.sh;
+    elif [ "$TARGET" = "win" ]; then
+      chmod +x platform/$TARGET/build.sh;
+    fi
+
+script:
+  - if [ "$TARGET" = "linux" ]; then
+      platform/$TARGET/build.sh;
+    elif [ "$TARGET" = "osx" ]; then
+      platform/$TARGET/build.sh;
+    elif [ "$TARGET" = "win" ]; then
+      platform/$TARGET/build.sh;
+    fi
