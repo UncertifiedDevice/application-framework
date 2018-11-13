@@ -1,2 +1,2 @@
 #!/bin/bash
-choco install mingw64
+choco install mingw
