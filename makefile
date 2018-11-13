@@ -1,54 +1,58 @@
-DBGLINKFLAGS = 	
-RLSLINKFLAGS = 	
+#Compiler Parameters
+cxxDebugFlags=-Wall	-fexceptions	-g	-std=c++17
+cxxReleaseFlags=-Wall	-fexceptions	-O2	-std=c++17
 
-DBGFLAGSCXX =	-Wall	-fexceptions	-g	-std=c++17
-RLSFLAGSCXX =	-Wall	-fexceptions	-O2	-std=c++17
+cDebugFlags=-Wall	-fexceptions	-g
+cReleaseFlags=-Wall	-fexceptions	-O2
 
-DBGFLAGSC =	-Wall	-fexceptions	-g
-RLSFLAGSC =	-Wall	-fexceptions	-O2
+cxxPlatformSources=$(shell find platform/$(TARGET)/src -name "*.cpp")
+cPlatformSources=$(shell find platform/$(TARGET)/src -name "*.c")
 
-DBGLIBS = -s
-RLSLIBS = -s
+cxxCommonSources=$(shell find src -name "*.cpp")
+cCommonSources=$(shell find src -name "*.c")
 
-DIROUT = bin
-DBGOUT = bin/debug.out
-RLSOUT = bin/release.out
+cxxOverriddenSources=$(shell ./override.sh $(cxxPlatformSources) $(cxxCommonSources))
+cOverriddenSources=$(shell ./override.sh $(cPlatformSources) $(cCommonSources))
 
-SOURCESCXX := $(shell find . -name "*.cpp")
-SOURCESC := $(shell find . -name "*.c")
-DBGOBJECTSCXX = $(SOURCESCXX:%.cpp=%.od)
-RLSOBJECTSCXX = $(SOURCESCXX:%.cpp=%.o)
-DBGOBJECTSC = $(SOURCESC:%.c=%.od)
-RLSOBJECTSC = $(SOURCESC:%.c=%.o)
-DBGPLATFORMOBJECTSCXX = $(PLATSRCCXX:%.cpp=%.od)
-RLSPLATFORMOBJECTSCXX = $(PLATSRCCXX:%.cpp=%.o)
-DBGPLATFORMOBJECTSC = $(PLATSRCC:%.c=%.od)
-RLSPLATFORMOBJECTSC = $(PLATSRCC:%.c=%.o)
+#Linker Parameters
+linkerDebugFlags= 
+linkerReleaseFlags= 
 
-$(DIROUT):
-	mkdir $(DIROUT)
-	
+linkerDebugLibraries=-s
+linkerReleaseLibraries=-s
+
+outputDirectory=bin
+
+outputDebugFile=$(outputDirectory)/debug.out
+outputReleaseFile=$(outputDirectory)/release.out
+
+cxxDebugObjects=$(cxxOverriddenSources:%.cpp=%.od)
+cxxReleaseObjects=$(cxxOverriddenSources:%.cpp=%.o)
+
+cDebugObjects=$(cOverriddenSources:%.c=%.od)
+cReleaseObjects=$(cOverriddenSources:%.c=%.o)
+
+$(outputDirectory):
+	mkdir $(outputDirectory)
+
 %.od: %.cpp
-	$(CXX)	$(DBGFLAGSCXX)	-c	$<	-o	$@
-	
+	$(CXX)	$(cxxDebugFlags)	-c	$<	-o	$@
+
 %.od: %.c
-	$(CC)	$(DBGFLAGSC)	-c	$<	-o	$@
+	$(CC)	$(cDebugFlags)	-c	$<	-o	$@
 
 %.o: %.cpp
-	$(CXX)	$(RLSFLAGSCXX)	-c	$<	-o	$@
-	
-%.o: %.c
-	$(CC)	$(RLSFLAGSC)	-c	$<	-o	$@
+	$(CXX)	$(cxxReleaseFlags)	-c	$<	-o	$@
 
-debug: $(DBGOBJECTSCXX) $(DBGOBJECTSC) $(DIROUT)
-	$(CXX)	$(DBGLINKFLAGS)	-o	$(DBGOUT)	$(DBGOBJECTSCXX)	$(DBGPLATFORMOBJECTSCXX)	$(DBGOBJECTSC)	$(DBGPLATFORMOBJECTSC)	$(DBGLIBS)
-	
-release: $(RLSOBJECTSCXX) $(RLSOBJECTSC) $(DIROUT)
-	$(CXX)	$(RLSLINKFLAGS)	-o	$(RLSOUT)	$(RLSOBJECTSCXX)	$(RLSPLATFORMOBJECTSCXX)	$(RLSOBJECTSC)	$(RLSPLATFORMOBJECTSC)	$(RLSLIBS)
-	
+%.o: %.c
+	$(CC)	$(cReleaseFlags)	-c	$<	-o	$@
+
+debug:	$(cxxDebugObjects)	$(cDebugObjects)	$(outputDirectory)
+	$(CXX)	$(linkerDebugFlags)	-o	$(outputDebugFile)	$(cxxDebugObjects)	$(cDebugObjects)	$(linkerDebugLibraries)
+
+release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)
+	$(CXX)	$(linkerReleaseFlags)	-o	$(outputReleaseFile)	$(cxxReleaseObjects)	$(cReleaseObjects)	$(linkerReleaseLibraries)
+
 all:
-	$(info	source	$(SOURCESCXX)	$(SOURCESC))
-	$(info	debug	$(DBGOBJECTSCXX)	$(DBGOBJECTSC))
-	$(info	release	$(RLSOBJECTSCXX)	$(RLSOBJECTSC))
-	$(MAKE)	debug
-	$(MAKE)	release
+	$(MAKE)	-f make.mak debug
+	$(MAKE)	-f make.mak release
