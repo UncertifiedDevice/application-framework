@@ -52,6 +52,8 @@ matrix:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+  
+  - mkdir platform/$TARGET/src
 
   - if [ -f override.sh ]; then
       chmod +x override.sh;
