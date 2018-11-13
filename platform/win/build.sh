@@ -1,4 +1,4 @@
 #!/bin/bash
 export TARGET=win
-export MAKE=mingw32-make
-mingw32-make -d all
+export MAKE=make
+make -d all
