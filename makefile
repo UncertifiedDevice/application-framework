@@ -1,87 +1,52 @@
-#Compiler Parameters
+#Compiler Parameters	
+cxxDebugFlags:=-Wall	-fexceptions	-g	-std=c++17		
+cxxReleaseFlags:=-Wall	-fexceptions	-O2	-std=c++17	
 	
-cxxDebugFlags:=-Wall	-fexceptions	-g	-std=c++17	
-cxxReleaseFlags:=-Wall	-fexceptions	-O2	-std=c++17
-
-	
-	
-cDebugFlags:=-Wall	-fexceptions	-g
-	
-cReleaseFlags:=-Wall	-fexceptions	-O2
-
-	
+cDebugFlags:=-Wall	-fexceptions	-g	
+cReleaseFlags:=-Wall	-fexceptions	-O2	
 	
 cxxOverriddenSources:=$(shell ./override.sh $(shell find platform/$(TARGET)/src -name "*.cpp") $(shell find src -name "*.cpp"))	
 cOverriddenSources:=$(shell ./override.sh $(shell find platform/$(TARGET)/src -name "*.c") $(shell find src -name "*.c"))	
-
 	
 #Linker Parameters	
 linkerDebugFlags=-s	
-linkerReleaseFlags=-s
-
+linkerReleaseFlags=-s	
 	
+linkerDebugLibraries=-s	
+linkerReleaseLibraries=-s	
 	
-linkerDebugLibraries=-s
-	
-linkerReleaseLibraries=-s
-
-	
-	
-outputDirectory=bin
-
-	
+outputDirectory=bin	
 outputDebugFile=$(outputDirectory)/debug.out	
-outputReleaseFile=$(outputDirectory)/release.out	
+outputReleaseFile=$(outputDirectory)/release.out		
 	
-
 cxxDebugObjects:=$(cxxOverriddenSources:%.cpp=%.od)	
-cxxReleaseObjects:=$(cxxOverriddenSources:%.cpp=%.o)
-
+cxxReleaseObjects:=$(cxxOverriddenSources:%.cpp=%.o)	
 	
-	
-cDebugObjects:=$(cOverriddenSources:%.c=%.od)
-	
+cDebugObjects:=$(cOverriddenSources:%.c=%.od)	
 cReleaseObjects:=$(cOverriddenSources:%.c=%.o)	
 	
-
-$(outputDirectory):
-	
-	mkdir $(outputDirectory)
-
-	
+$(outputDirectory):	
+	mkdir $(outputDirectory)	
 	
 %.od: %.cpp	
-	$(CXX)	$(cxxDebugFlags)	-c	$<	-o	$@
-
+	$(CXX)	$(cxxDebugFlags)	-c	$<	-o	$@	
 	
-	
-%.od: %.c
-	
+%.od: %.c	
 	$(CC)	$(cDebugFlags)	-c	$<	-o	$@	
-
 	
-%.o: %.cpp
-	
+%.o: %.cpp	
 	$(CXX)	$(cxxReleaseFlags)	-c	$<	-o	$@	
-
 	
-%.o: %.c
-	
+%.o: %.c	
 	$(CC)	$(cReleaseFlags)	-c	$<	-o	$@	
 	
-
 debug:	$(cxxDebugObjects)	$(cDebugObjects)	$(outputDirectory)	
 	$(CXX)	$(linkerDebugFlags)	-o	$(outputDebugFile)	$(cxxDebugObjects)	$(cDebugObjects)	$(linkerDebugLibraries)	
 	
-
-release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)
-	
+release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)	
 	$(CXX)	$(linkerReleaseFlags)	-o	$(outputReleaseFile)	$(cxxReleaseObjects)	$(cReleaseObjects)	$(linkerReleaseLibraries)	
 	
-
-all:
+all:	
+	$(MAKE) debug	
+	$(MAKE) release	
 	
-	$(MAKE) debug
-	
-	$(MAKE) release
-		
