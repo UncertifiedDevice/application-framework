@@ -54,5 +54,5 @@ release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)
 	$(CXX)	$(linkerReleaseFlags)	-o	$(outputReleaseFile)	$(cxxReleaseObjects)	$(cReleaseObjects)	$(linkerReleaseLibraries)
 
 all:
-	$(MAKE)	-f make.mak debug
-	$(MAKE)	-f make.mak release
+	$(MAKE) debug
+	$(MAKE) release
