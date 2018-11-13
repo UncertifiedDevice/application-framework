@@ -50,5 +50,3 @@ release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)
 all:
 	$(MAKE) debug
 	$(MAKE) release	;
-
-makefile: ;
