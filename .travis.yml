@@ -52,6 +52,15 @@ matrix:
 
 before_install:
   - eval "${MATRIX_EVAL}"
+
+  - if [ -f override.sh ]; then
+      chmod +x override.sh;
+    fi
+
+  - if [ -f platform/$TARGET/install.sh ]; then
+      chmod +x platform/$TARGET/install.sh;
+    fi
+
   - if [ "$CXX" = "g++" ] && [ "$TARGET" = "linux" ]; then
       sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
     fi
@@ -62,9 +71,6 @@ before_install:
       sudo apt-get install -qq g++-7;
       sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 50;
     fi
-  - if [ -f platform/$TARGET/install.sh ]; then
-      chmod +x platform/$TARGET/install.sh;
-    fi
 
 install:
   - if [ -f platform/$TARGET/install.sh ]; then
@@ -72,19 +78,11 @@ install:
     fi
     
 before_script:
-  - if [ "$TARGET" = "linux" ]; then
-      chmod +x platform/$TARGET/build.sh;
-    elif [ "$TARGET" = "osx" ]; then
-      chmod +x platform/$TARGET/build.sh;
-    elif [ "$TARGET" = "win" ]; then
+  - if [ -f platform/$TARGET/build.sh ]; then
       chmod +x platform/$TARGET/build.sh;
     fi
 
 script:
-  - if [ "$TARGET" = "linux" ]; then
-      platform/$TARGET/build.sh;
-    elif [ "$TARGET" = "osx" ]; then
-      platform/$TARGET/build.sh;
-    elif [ "$TARGET" = "win" ]; then
+  - if [ -f platform/$TARGET/build.sh ]; then
       platform/$TARGET/build.sh;
     fi
