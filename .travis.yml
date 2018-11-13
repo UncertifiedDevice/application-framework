@@ -5,34 +5,6 @@ sudo: true
 matrix:
   include:
 
-  - os: linux
-    dist: trusty
-    sudo: required
-    addons:
-      apt:
-        sources: 
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-7
-    env: 
-      - TARGET="linux"
-      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-      
-  - os: linux
-    compiler: clang
-    dist: trusty
-    sudo: required
-    addons:
-      apt:
-        sources: 
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-6.0
-        packages:
-          - clang-6.0
-    env: 
-      - TARGET="linux"
-      - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
-
   - os: osx
     env: 
       - TARGET="osx"
@@ -48,7 +20,9 @@ matrix:
   - os: windows
     language: go
     compiler: mingw
-    env: TARGET="win"
+    env: 
+    - TARGET="win"
+    - MATRIX_EVAL="CXX=g++ && CC=gcc && MAKE=mingw32-make && TARGET=win"
 
 before_install:
   - eval "${MATRIX_EVAL}"
