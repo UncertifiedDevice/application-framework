@@ -51,4 +51,4 @@ all:
 	$(MAKE) debug
 	$(MAKE) release	;
 
-Makefile: ;
+makefile: ;

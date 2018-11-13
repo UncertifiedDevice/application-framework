@@ -5,6 +5,18 @@ sudo: true
 matrix:
   include:
 
+  - os: osx
+    env: 
+      - TARGET="osx"
+      - HOMEBREW_NO_AUTO_UPDATE=1
+      - MATRIX_EVAL="brew install gcc && CC=gcc && CXX=g++"
+
+  - os: osx
+    compiler: clang
+    env: 
+      - TARGET="osx"
+      - MATRIX_EVAL="CC=clang && CXX=clang++"
+
   - os: windows
     language: go
     compiler: mingw
@@ -12,7 +24,7 @@ matrix:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-  
+
   - if [ ! -d platform/$TARGET/src ]; then
       mkdir platform/$TARGET/src;
     fi
@@ -25,13 +37,9 @@ before_install:
       chmod +x platform/$TARGET/install.sh;
     fi
 
-  - if [ "$CXX" = "g++" ] && [ "$TARGET" = "linux" ]; then
-      sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
-    fi
   - if [ "$TARGET" = "linux" ]; then
+      sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
       sudo apt-get update -qq;
-    fi
-  - if [ "$CXX" = "g++" ] && [ "$TARGET" = "linux" ]; then
       sudo apt-get install -qq g++-7;
       sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 50;
     fi
