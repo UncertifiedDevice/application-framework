@@ -5,14 +5,14 @@ cxxReleaseFlags:=-Wall	-fexceptions	-O2	-std=c++17
 cDebugFlags:=-Wall	-fexceptions	-g
 cReleaseFlags:=-Wall	-fexceptions	-O2
 
-cxxOverriddenSources:=$(shell ./override.sh $(shell find platform/$(TARGET)/src -name "*.cpp") $(shell find src -name "*.cpp"))
-cOverriddenSources:=$(shell ./override.sh $(shell find platform/$(TARGET)/src -name "*.c") $(shell find src -name "*.c"))
+cxxOverriddenSources:=$(shell find source -name "*.cpp")
+cOverriddenSources:=$(shell find source -name "*.c")
 
 #Linker Parameters
 linkerDebugFlags:= 
 linkerReleaseFlags:= 
 
-linkerDebugLibraries:=-s
+linkerDebugLibraries:= 
 linkerReleaseLibraries:=-s
 
 outputDirectory:=bin
@@ -50,5 +50,3 @@ release:	$(cxxReleaseObjects)	$(cReleaseObjects)	$(outputDirectory)
 all:
 	$(MAKE) debug
 	$(MAKE) release	;
-
-makefile: ;

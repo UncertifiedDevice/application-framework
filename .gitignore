@@ -5,6 +5,7 @@
 *.slo
 *.lo
 *.o
+*.od
 *.obj
 
 # Precompiled Headers
@@ -32,6 +33,6 @@
 *.app
 
 # Project Files
-*.cbp
-*.layout
 *.depend
+*.layout
+*.cbp

@@ -1,2 +1,2 @@
 #!/bin/bash
-make -d all
+$(MAKE) all
