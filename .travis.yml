@@ -5,54 +5,54 @@ sudo: true
 matrix:
   include:
   - os: linux
-      dist: trusty
-      sudo: required
-      addons:
-        apt:
-          sources: 
-          - ubuntu-toolchain-r-test
-          packages:
-          - g++-7
-      env: 
-      - TARGET="linux"
-      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    dist: trusty
+    sudo: required
+    addons:
+      apt:
+        sources: 
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-7
+    env: 
+    - TARGET="linux"
+    - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
 
   - os: linux
-      compiler: clang
-      dist: trusty
-      sudo: required
-      addons:
-        apt:
-          sources: 
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-6.0
-          packages:
-          - clang-6.0
-      env: 
-      - TARGET="linux"
-      - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+    compiler: clang
+    dist: trusty
+    sudo: required
+    addons:
+      apt:
+        sources: 
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-6.0
+        packages:
+        - clang-6.0
+    env: 
+    - TARGET="linux"
+    - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
 
 
   - os: osx
     env: 
-      - TARGET="osx"
-      - HOMEBREW_NO_AUTO_UPDATE=1
-      - MATRIX_EVAL="brew install gcc && CC=gcc && CXX=g++"
+    - TARGET="osx"
+    - HOMEBREW_NO_AUTO_UPDATE=1
+    - MATRIX_EVAL="brew install gcc && CC=gcc && CXX=g++"
 
 
   - os: osx
-      compiler: clang
-      env: 
-      - TARGET="osx"
-      - MATRIX_EVAL="CC=clang && CXX=clang++"
+    compiler: clang
+    env: 
+    - TARGET="osx"
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
 
 
   - os: windows
-      language: go
-      env:
-      - TARGET="win"
-      - MATRIX_EVAL="CC=gcc && CXX=g++ && MAKE=mingw32-make"
+    language: go
+    env:
+    - TARGET="win"
+    - MATRIX_EVAL="CC=gcc && CXX=g++ && MAKE=mingw32-make"
 
 
 install:
