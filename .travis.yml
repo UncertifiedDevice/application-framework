@@ -55,16 +55,24 @@ matrix:
     - MATRIX_EVAL="CC=gcc && CXX=g++ && MAKE=mingw32-make"
 
 
+before_install:
+  - if [ -f platform.sh ]; then
+      chmod +x platform.sh;
+    fi
+
+  - if [ platform/$TARGET/install.sh ]; then
+      chmod +x platform/$TARGET/install.sh;
+    fi
+
+
 install:
   - eval "${MATRIX_EVAL}"
 
   - if [ -f platform.sh ]; then
-      chmod +x platform.sh;
       platform.sh;
     fi
 
   - if [ -f platform/$TARGET/install.sh ]; then
-      chmod +x platform/$TARGET/install.sh;
       platform/$TARGET/install.sh;
     fi
     
@@ -73,8 +81,13 @@ install:
     fi
 
 
-script:
+before_script:
   - if [ -f platform/$TARGET/build.sh ]; then
       chmod +x platform/$TARGET/build.sh;
+    fi
+
+
+script:
+  - if [ -f platform/$TARGET/build.sh ]; then
       platform/$TARGET/build.sh;
     fi
