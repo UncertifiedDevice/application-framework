@@ -1,2 +1,2 @@
 #!/bin/bash
-$MAKE all
+make all
