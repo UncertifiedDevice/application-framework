@@ -1,2 +1,2 @@
 #!/bin/bash
-make all
+mingw32-make all
